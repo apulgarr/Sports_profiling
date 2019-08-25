@@ -54,6 +54,6 @@ tweet = Tweets(
             )
 
 #tweet.extract_data()
-print(tweet.get_limit_access())
+#print(tweet.get_limit_access())
 
 
