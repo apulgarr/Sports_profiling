@@ -54,8 +54,3 @@ tweet = Tweets(
             '967916812288561152-tn1uUHdOunWYg8HcynwU1xTcBYvyv69',
             'Wg5IzILoJhJI9ryZVGu30rBPDoqxR9nA3tIVzfrNyG7gd'
             )
-
-tweet.extract_data()
-#print(tweet.get_limit_access())
-
-
