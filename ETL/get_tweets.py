@@ -15,35 +15,37 @@ class Tweets(object):
 
 
     def extract_data(self):
-        data = {'id_user': [], 'user_name': [], 'location': [], 'created_at': [], 'text': []}
+        data = {'id_user': [], 'user_name': [], 'created_at': [], 'followers': [], 'following': [], 'text': []}
         sports = ['soccer', 'american football', 'volleyball', 'chess', 'cycling', 'baseball', 'ice hockey', 'golf', 'table tennis', 'basketball', 'dodgeball', 'rugby', 'handball', 'wrestling', 'water polo', 'skiing', 'badminton', 'field hockey', 'bowling', 'lacrosse', 'boxing', 'cricket']
 
         for sport in sports:
             word = 'i love %s' % (sport)
 
             try:
-                tweets = tweepy.Cursor(self.api.search, q=word, lang='en',tweet_mode='extended').items(500)
+                tweets = tweepy.Cursor(self.api.search, q=word, lang='en',tweet_mode='extended').items(1000)
                 print(self.get_limit_access())
 
                 for tweet in tweets:
                     if 'retweeted_status' not in dir(tweet):
                         data['id_user'].append(tweet.id_str)
-                        data['user_name'].append(tweet.user.screen_name)
-                        data['location'].append(tweet.user.location)
+                        data['user_name'].append(tweet.user.name)
+                        data['followers'].append(tweet.user.followers_count)
+                        data['following'].append(tweet.user.friends_count)
                         data['created_at'].append(tweet.created_at)
                         data['text'].append(tweet.full_text)
                     else:
                         data['id_user'].append(tweet.retweeted_status.id_str)
                         data['user_name'].append(tweet.retweeted_status.user.screen_name)
-                        data['location'].append(tweet.retweeted_status.user.location)
+                        data['followers'].append(tweet.retweeted_status.user.followers_count)
+                        data['following'].append(tweet.retweeted_status.user.friends_count)
                         data['created_at'].append(tweet.retweeted_status.created_at)
                         data['text'].append(tweet.retweeted_status.full_text)
 
             except tweepy.TweepError:
-                print("Waiting for the neex time frame")
+                print("Waiting for the next time frame")
                 time.sleep(15 * 60)
 
-        data_frame = pd.DataFrame(data=data, columns=['id_user', 'user_name', 'location', 'created_at', 'text']).to_csv('tweets.csv', index=False, encoding='utf-8')
+        data_frame = pd.DataFrame(data=data, columns=['id_user', 'user_name', 'created_at', 'followers', 'following', 'text']).to_csv('tweets_2.csv', index=False, encoding='utf-8')
 
 
 tweet = Tweets(
@@ -53,7 +55,7 @@ tweet = Tweets(
             'Wg5IzILoJhJI9ryZVGu30rBPDoqxR9nA3tIVzfrNyG7gd'
             )
 
-#tweet.extract_data()
+tweet.extract_data()
 #print(tweet.get_limit_access())
 
 
