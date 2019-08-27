@@ -46,11 +46,3 @@ class Tweets(object):
                 time.sleep(15 * 60)
 
         data_frame = pd.DataFrame(data=data, columns=['id_user', 'user_name', 'created_at', 'followers', 'following', 'text']).to_csv('tweets_2.csv', index=False, encoding='utf-8')
-
-
-tweet = Tweets(
-            'GE4iCBIZ5HYdRleDXRzjFMyD6',
-            'Ko9pvWagBFFt6Hw8Vfs3yMSEGmfcL4N9M5g1jloSpwOqPhP5q6',
-            '967916812288561152-tn1uUHdOunWYg8HcynwU1xTcBYvyv69',
-            'Wg5IzILoJhJI9ryZVGu30rBPDoqxR9nA3tIVzfrNyG7gd'
-            )
