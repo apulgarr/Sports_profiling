@@ -75,5 +75,6 @@ def get_info(file_path):
     data = pd.read_csv(file_path)
     print("Missing values")
     print(data.isna().sum())
+    print(data.isnull().sum())
     print("Shape")
     print(data.shape)
