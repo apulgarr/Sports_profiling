@@ -14,32 +14,36 @@ class Tweets(object):
         return self.api.rate_limit_status()['resources']['search']
 
 
-    def extract_data(self):
-        data = {'id_user': [], 'user_name': [], 'created_at': [], 'followers': [], 'following': [], 'text': []}
-        #sports = ['soccer', 'american football', 'volleyball', 'chess', 'cycling', 'baseball', 'ice hockey', 'golf', 'table tennis', 'basketball', 'dodgeball', 'rugby', 'handball', 'wrestling', 'water polo', 'skiing', 'badminton', 'field hockey', 'bowling', 'lacrosse', 'boxing', 'cricket']
+    def extract_data(self, out_path):
+        data = {'user_name': [], 'likes': [], 'text': [], 'sport': []}
+        sports = ['soccer', 'american football', 'volleyball', 'chess', 'cycling', 'baseball', 'ice hockey', 'golf', 'table tennis', 'basketball', 'dodgeball', 'rugby', 'handball', 'wrestling', 'water polo', 'skiing', 'badminton', 'field hockey', 'bowling', 'lacrosse', 'boxing', 'cricket']
 
-        try:
-            tweets = tweepy.Cursor(self.api.search, q="sport", lang='en',tweet_mode='extended').items(5000)
-            print(self.get_limit_access())
+        for sport in sports:
 
-            for tweet in tweets:
-                if 'retweeted_status' not in dir(tweet):
-                    data['id_user'].append(tweet.id_str)
-                    data['user_name'].append(tweet.user.name)
-                    data['followers'].append(tweet.user.followers_count)
-                    data['following'].append(tweet.user.friends_count)
-                    data['created_at'].append(tweet.created_at)
-                    data['text'].append(tweet.full_text)
-                else:
-                    data['id_user'].append(tweet.retweeted_status.id_str)
-                    data['user_name'].append(tweet.retweeted_status.user.screen_name)
-                    data['followers'].append(tweet.retweeted_status.user.followers_count)
-                    data['following'].append(tweet.retweeted_status.user.friends_count)
-                    data['created_at'].append(tweet.retweeted_status.created_at)
-                    data['text'].append(tweet.retweeted_status.full_text)
+            try:
+                print(sport)
+                tweets = tweepy.Cursor(self.api.search, q=sport, lang='en',tweet_mode='extended').items(1000)
+                print(self.get_limit_access())
 
-        except tweepy.TweepError:
-            print("Waiting for the next time frame")
-            time.sleep(15 * 60)
+                for tweet in tweets:
+                    if 'retweeted_status' not in dir(tweet):
+                        data['user_name'].append(tweet.user.name)
+                        data['likes'].append(tweet.favorite_count)
+                        data['text'].append(tweet.full_text)
+                        data['sport'].append(sport)
+                    else:
+                        data['user_name'].append(tweet.retweeted_status.user.screen_name)
+                        data['likes'].append(tweet.retweeted_status.favorite_count)
+                        data['text'].append(tweet.retweeted_status.full_text)
+                        data['sport'].append(sport)
 
-        data_frame = pd.DataFrame(data=data, columns=['id_user', 'user_name', 'created_at', 'followers', 'following', 'text']).to_csv('new_tweets.csv', index=False, encoding='utf-8')
+            except tweepy.TweepError:
+                print("Waiting for the next time frame")
+                time.sleep(15 * 60)
+
+        path = "%s.csv" % (out_path) 
+        data_frame = pd.DataFrame(data=data, columns=['user_name', 'likes', 'text', 'sport']).to_csv(path, index=False, encoding='utf-8')
+
+
+if __name__ == "__main__":
+    pass

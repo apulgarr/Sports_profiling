@@ -5,14 +5,14 @@ import re
 import nltk
 import enchant
 
-def transform_data(data_path):
+def transform_data(data_path, out_path):
     data = pd.read_csv(data_path)
 
     #Droping the repeated rows
     data = data.drop_duplicates(subset="text")
 
     #Filling the mising values
-    data['user_name'] = data['user_name'].fillna("Unknown")
+    data['user_name'] = data['user_name'].apply(fill_null)
 
     #Cleaning the text removing emojis of the user name and cleaning the tweet
     data['text'] = data['text'].apply(clean_text)
@@ -23,7 +23,17 @@ def transform_data(data_path):
     data['text_lemmatized'] = data['text'].apply(lemmatizer)
 
     #Creating the new normalized file
-    data.to_csv('tweets_cleaned.csv', encoding='utf-8')
+    out_path = "%s.csv" % (out_path)
+    data.to_csv(out_path, encoding='utf-8')
+
+
+def fill_null(text):
+    text = text.strip()
+
+    if not text:
+        return "Unknown"
+
+    return text
 
 
 def remove_emojis(text):
@@ -32,7 +42,7 @@ def remove_emojis(text):
 
 def remove_trash_words(text):
     checker = enchant.Dict("en_US")
-    return checker.check(text)
+    return checker.check(text) and len(text) > 1
 
 
 def stemming(text):
