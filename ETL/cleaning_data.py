@@ -92,6 +92,7 @@ def add_columns(data_path):
         text = text.replace("'", "").replace('[', '').replace(']', '').replace(' ', '').split(',')
         data_text.append(aux_str.join(text))
 
+
     data['data_text'] = data_text
 
     data.to_csv(data_path, encoding='utf-8')
@@ -107,4 +108,5 @@ def get_info(file_path):
 
 
 if __name__ == '__main__':
-    add_columns('../data_set_tweets/cleaned_tweets.csv')
+    #add_columns('../data_set_tweets/cleaned_tweets.csv')
+    get_info('../data_set_tweets/cleaned_tweets.csv')
