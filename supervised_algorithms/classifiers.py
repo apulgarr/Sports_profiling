@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 def classifiers(data_path):
     data = pd.read_csv(data_path)
 
-    x_data = data['data_text']
+    x_data = data['text_string']
     y_data = data['sport']
 
     count_vect = CountVectorizer()
@@ -18,7 +18,7 @@ def classifiers(data_path):
 
     x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, test_size = 0.3, random_state=42)
 
-    knn_model = KNeighborsClassifier(n_neighbors = 5)
+    knn_model = KNeighborsClassifier(n_neighbors = 15)
     knn_model.fit(x_train, y_train)
 
     naives_model = MultinomialNB()
